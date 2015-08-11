@@ -1,0 +1,22 @@
+{
+  "name": "json-collections",
+  "version": "0.0.0",
+  "description": "Persistent json collection stores.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sethbonnie/json-collections.git"
+  },
+  "author": "Seth Bonnie <sethkbonnie@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sethbonnie/json-collections/issues"
+  },
+  "homepage": "https://github.com/sethbonnie/json-collections#readme",
+  "dependencies": {
+    "immutable": "^3.7.4"
+  }
+}
