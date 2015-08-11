@@ -4,8 +4,9 @@ var Promise = require( 'promise' );
 
 module.exports = function ( filepath ) {
   var filepath = path.resolve( filepath );
+  var exists = fs.existsSync( filepath );
 
-  return {
+  var fileObj = {
     read: function () {
       var data;
       var json;
@@ -29,9 +30,16 @@ module.exports = function ( filepath ) {
       return new Promise(function (resolve, reject) {
         fs.writeFile( filepath, data, function (err) {
           if ( err ) reject( err );
-          else resolve();
+          else {
+            fileObj.exists = true;
+            resolve();
+          }
         });
       });
-    }
+    },
+
+    exists: fs.existsSync( filepath )
   }
+
+  return fileObj;
 };

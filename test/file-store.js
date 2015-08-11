@@ -1,4 +1,5 @@
 var assert = require( 'assert' );
+var fs = require( 'fs' );
 var path = require( 'path' );
 var store = require( '../src/file-store' );
 
@@ -40,4 +41,60 @@ describe( 'store(filepath)', function() {
       assert.equal( obj[0].id, 1 );
     });
   });
+
+  describe( 'returned file object .write()', function() {
+    var filepath = path.resolve( __dirname, './fixtures/temp.json' );
+
+    before( function (done) {
+      // Remove the temp file if it exists
+      fs.unlink( filepath, function (err) {
+        if ( err ) console.error( err );
+        done();
+      });
+    });
+
+    after( function (done) {
+      // Clean up temp file
+      fs.unlink( filepath, function (err) {
+        if ( err ) console.error( err );
+        done();
+      });
+    });    
+
+    it( 'returns a promise', function() {
+      var file = store( filepath );
+      var result = file.write({ "name": "test" });
+
+      assert.equal( typeof result.then, 'function' );
+    });
+
+
+    it( 'creates the file if it did not exist', function( done ) {
+      var file = store( filepath );
+      var promise = file.write({ "name": "test" });
+
+      promise.then( function() {
+        fs.exists( filepath, function( exists ) {
+          assert( exists );
+          done();
+        });
+      });
+    });
+  });
+
+  describe( 'returned file object .exists', function() {
+    it( 'is true when the filepath exists', function() {
+      var filepath = path.resolve( __dirname, './fixtures/asdf.json' );
+      var file = store( filepath );
+
+      assert.strictEqual( file.exists, false );
+    });
+
+    it( 'is false when the filepath does not exist', function() {
+      var filepath = path.resolve( __dirname, './fixtures/users.json' );
+      var file = store( filepath );
+
+      assert.strictEqual( file.exists, true );
+    });
+  })
 });
