@@ -96,5 +96,5 @@ describe( 'store(filepath)', function() {
 
       assert.strictEqual( file.exists, true );
     });
-  })
+  });
 });
