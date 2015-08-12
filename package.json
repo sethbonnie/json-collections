@@ -18,7 +18,11 @@
   "homepage": "https://github.com/sethbonnie/json-collections#readme",
   "dependencies": {
     "immutable": "^3.7.4",
+    "mkdirp": "^0.5.1",
     "mocha": "^2.2.5",
     "promise": "^7.0.4"
+  },
+  "devDependencies": {
+    "rimraf": "^2.4.2"
   }
 }

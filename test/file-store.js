@@ -1,6 +1,7 @@
-var assert = require( 'assert' );
 var fs = require( 'fs' );
 var path = require( 'path' );
+var assert = require( 'assert' );
+var rimraf = require( 'rimraf' );
 var store = require( '../src/file-store' );
 
 describe( 'store(filepath)', function() {
@@ -45,21 +46,31 @@ describe( 'store(filepath)', function() {
   describe( 'returned file object .write()', function() {
     var filepath = path.resolve( __dirname, './fixtures/temp.json' );
 
+    // Remove the temp file if it exists
     before( function (done) {
-      // Remove the temp file if it exists
       fs.unlink( filepath, function (err) {
         if ( err ) console.error( err );
         done();
       });
     });
 
+    // Clean up temp file
     after( function (done) {
-      // Clean up temp file
       fs.unlink( filepath, function (err) {
         if ( err ) console.error( err );
         done();
       });
-    });    
+    });
+
+    // Remove the temporary dirs
+    after( function(done) {
+      var dir = path.resolve( __dirname, './fixtures/a' );
+      
+      rimraf( dir, function (err) {
+        if ( err ) console.error( err );
+        done();
+      });
+    });
 
     it( 'returns a promise', function() {
       var file = store( filepath );
@@ -79,6 +90,21 @@ describe( 'store(filepath)', function() {
           done();
         });
       });
+    });
+
+    it( 'creates the directory path if it does not exist', function( done ) {
+      var filepath = path.resolve( __dirname, './fixtures/a/b/c/temp.json' );
+      var dirname = path.dirname( filepath );
+      var file = store( filepath );
+      
+      file
+        .write({ "name": "user" })
+        .then(function () {
+          fs.exists( filepath, function (exists) {
+            assert( exists );
+            done();
+          });
+        });
     });
   });
 

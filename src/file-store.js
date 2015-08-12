@@ -1,5 +1,6 @@
 var fs = require( 'fs' );
 var path = require( 'path' );
+var mkdirp = require( 'mkdirp' );
 var Promise = require( 'promise' );
 
 module.exports = function ( filepath ) {
@@ -28,12 +29,19 @@ module.exports = function ( filepath ) {
       var json = JSON.stringify( data );
 
       return new Promise(function (resolve, reject) {
-        fs.writeFile( filepath, data, function (err) {
-          if ( err ) reject( err );
-          else {
-            fileObj.exists = true;
-            resolve();
+        mkdirp( path.dirname(filepath), function ( err ) {
+          if ( err ) {
+            console.error( err );
+            return reject( err );
           }
+
+          fs.writeFile( filepath, data, function (err) {
+            if ( err ) reject( err );
+            else {
+              fileObj.exists = true;
+              resolve();
+            }
+          });
         });
       });
     },
