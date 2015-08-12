@@ -85,7 +85,7 @@ module.exports = function Collection( options ) {
     },
 
     persist: function () {
-      return file.write( JSON.stringify(cache.toJSON()) );
+      return file.write( cache.toJSON() );
     }
   };
 

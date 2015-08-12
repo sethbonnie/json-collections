@@ -35,7 +35,7 @@ module.exports = function ( filepath ) {
             return reject( err );
           }
 
-          fs.writeFile( filepath, data, function (err) {
+          fs.writeFile( filepath, json, function (err) {
             if ( err ) reject( err );
             else {
               fileObj.exists = true;
