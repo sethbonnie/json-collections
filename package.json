@@ -1,6 +1,6 @@
 {
   "name": "json-collections",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Persistent json collection stores.",
   "main": "index.js",
   "scripts": {
