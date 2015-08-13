@@ -1,13 +1,26 @@
+var path = require( 'path' );
 var Immutable = require( 'immutable' );
 var store = require( './file-store' );
 var Model = require( './model' );
 
 /**
-  * 
+  * @param config - an object containing the configuration parameters for this
+  *   collection. It *MUST* contain a <String> name parameter.
+  *
+  *   You can also choose to give it a `dataDir` param, which defaults to the 
+  *   current directory if not given. This will be used as the location to 
+  *   save the JSON file.
+  * @returns a collection object which can be used to manipulate the JSON in memory
+  *   and persist it to disk.
   */
-module.exports = function Collection( options ) {
-  var filepath = options.filepath;
-  var schema = options.schema;
+module.exports = function Collection( config ) {
+  var name = config.name;
+  var dataDir = config.dataDir || '.';
+  var filepath = path.resolve( dataDir, name + '.json' );
+
+  if ( typeof name !== 'string' ) {
+    throw new Error( 'Collection must be passed an object with a name parameter.' );
+  }
 
   // Our internal collection
   var cache;
