@@ -109,14 +109,14 @@ describe( 'store(filepath)', function() {
   });
 
   describe( 'returned file object .exists', function() {
-    it( 'is true when the filepath exists', function() {
+    it( 'is false when the filepath does not exist', function() {
       var filepath = path.resolve( __dirname, './fixtures/asdf.json' );
       var file = store( filepath );
 
       assert.strictEqual( file.exists, false );
     });
 
-    it( 'is false when the filepath does not exist', function() {
+    it( 'is true when the filepath exists', function() {
       var filepath = path.resolve( __dirname, './fixtures/users.json' );
       var file = store( filepath );
 
