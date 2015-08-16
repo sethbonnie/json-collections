@@ -132,7 +132,41 @@ describe( 'Collection instance', function() {
 	});
 
 	describe( '#remove(query)', function() {
+    beforeEach(function() {
+      Players
+        .add({
+          number: 12,
+          name: 'Tom Brady',
+          position: 'Quarterback',
+          team: 'Patriots'
+        })
+        .add({
+          number: 18,
+          name: 'Peyton Manning',
+          position: 'Quarterback',
+          team: 'Broncos'
+        });
+    });
 
+    it( 'does not remove any items that do not match the query', function() {
+      Players.remove({ team: 'Eagles' });
+
+      assert.equal( Players.size(), 2 );
+    });
+
+    it( 'removes models that match the query', function() {
+      Players.remove({ number: 12 });
+
+      assert.equal( Players.size(), 1 );
+    });
+
+    it( 'returns the collection for chaining', function() {
+      Players
+        .remove({ number: 12 })
+        .remove({ number: 18 });
+
+      assert.equal( Players.size(), 0 );
+    });
 	});
 
 	describe( '#persist()', function() {

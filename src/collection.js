@@ -78,16 +78,18 @@ module.exports = function Collection( config ) {
     remove: function (query) {
       var keys = Object.keys( query );
 
+      // Since we want to keep the items that don't match, we flip the usual
+      // false and true tests.
       cache = cache.filter(function (value) {
         var key;
 
         for ( var i = 0; i < keys.length; i++ ) {
           key = keys[i];
           if ( value.get(key) != query[key] ) {
-            return false; 
+            return true; 
           }
         }
-        return true;
+        return false;
       });
 
       return collection;
