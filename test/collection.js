@@ -69,11 +69,66 @@ describe( 'Collection instance', function() {
 	});
 
 	describe( '#find(query)', function() {
+    beforeEach(function() {
+      Players
+        .add({
+          number: 12,
+          name: 'Tom Brady',
+          position: 'Quarterback',
+          team: 'Patriots'
+        })
+        .add({
+          number: 18,
+          name: 'Peyton Manning',
+          position: 'Quarterback',
+          team: 'Broncos'
+        });
+    });
 
+    it( 'returns an empty Array if query does not match any models', function() {
+      var result = Players.find({ team: 'Eagles' });
+
+      assert.equal( result.length, 0 );
+    });
+
+    it( 'returns an Array of models that match query', function() {
+      var result = Players.find({ position: 'Quarterback' });
+
+      assert.equal( result.length, 2 );
+
+      // check model properties
+      assert.equal( typeof result[0].set, 'function' );
+    });
 	});
 
 	describe( '#findOne(query)', function() {
+    beforeEach(function() {
+      Players
+        .add({
+          number: 12,
+          name: 'Tom Brady',
+          position: 'Quarterback',
+          team: 'Patriots'
+        })
+        .add({
+          number: 18,
+          name: 'Peyton Manning',
+          position: 'Quarterback',
+          team: 'Broncos'
+        });
+    });
 
+    it( 'returns `undefined` if query does not match any models', function() {
+      var result = Players.findOne({ team: 'Eagles' });
+
+      assert.equal( typeof result, 'undefined' );
+    });
+
+    it( 'returns the first model that matches the query', function() {
+      var result = Players.findOne({ position: 'Quarterback' }).toJSON();
+
+      assert.equal( result.number, 12 );
+    });
 	});
 
 	describe( '#remove(query)', function() {
@@ -99,7 +154,7 @@ describe( 'Collection instance', function() {
     });
 
     it( 'saves correct json to the file', function( done ) {
-      var player = { number: 18, name: 'Peyton Manning', team: 'Colts' };
+      var player = { number: 18, name: 'Peyton Manning', team: 'Broncos' };
 
       Players.add(player);
 

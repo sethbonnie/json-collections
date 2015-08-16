@@ -8,15 +8,15 @@ var List = Immutable.List;
 var Model = module.exports = function (map, collection, cache) {
   var model;
 
-  if ( Map.isMap(map) ) {
+  if ( !Map.isMap(map) ) {
     throw new Error( 'Missing map argument to Model constructor.' );
   }
 
-  if ( List.isList(collection) ) {
+  if ( typeof collection === 'object' && typeof collection.persis === 'function' ) {
     throw new Error( 'Missing collection argument to Model constructor.' );
   }
 
-  if ( List.isList(cache) ) {
+  if ( !List.isList(cache) ) {
     throw new Error( 'Missing cache argument to Model constructor.' );
   }
 
