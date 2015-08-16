@@ -40,6 +40,10 @@ module.exports = function Collection( config ) {
   }
 
   collection = {
+    size: function () {
+      return cache.size;
+    },
+
     add: function ( data ) {
       var map = Immutable.fromJS( data );
 
