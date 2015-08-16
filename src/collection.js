@@ -102,7 +102,8 @@ module.exports = function Collection( config ) {
     },
 
     persist: function () {
-      return file.write( cache.toJSON() );
+      var promise = file.write( cache.toJSON() );
+      return promise;
     }
   };
 
