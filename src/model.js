@@ -12,7 +12,7 @@ var Model = module.exports = function (map, collection, cache) {
     throw new Error( 'Missing map argument to Model constructor.' );
   }
 
-  if ( typeof collection === 'object' && typeof collection.persis === 'function' ) {
+  if ( typeof collection !== 'object' || typeof collection.persist !== 'function' ) {
     throw new Error( 'Missing collection argument to Model constructor.' );
   }
 
@@ -21,6 +21,10 @@ var Model = module.exports = function (map, collection, cache) {
   }
 
   model = {
+    get: function (key) {
+      return map.get(key);
+    },
+
     /**
       * 
       */
@@ -34,7 +38,7 @@ var Model = module.exports = function (map, collection, cache) {
         newMap = map.merge( key );
       }
 
-      updateCache( map, newMap, cache );
+      cache = updateCache( map, newMap, collection );
 
       map = newMap;
 
@@ -49,7 +53,7 @@ var Model = module.exports = function (map, collection, cache) {
 
       newMap = map.delete( key );
 
-      updateCache( map, newMap, cache );
+      updateCache( map, newMap, collection );
 
       map = newMap;
 
@@ -77,10 +81,14 @@ var Model = module.exports = function (map, collection, cache) {
 /**
   * Updates the `oldMap` in `list` with `newMap`
   */
-function updateCache( oldMap, newMap, list ) {
+function updateCache( oldMap, newMap, collection ) {
+  var list = collection._toList();
   var index = list.indexOf( oldMap );
 
   if ( index > -1 ) {
     list = list.set( index, newMap );
   }
+
+  collection._update(list);
+  return list;
 };

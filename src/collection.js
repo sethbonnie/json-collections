@@ -106,6 +106,16 @@ module.exports = function Collection( config ) {
     persist: function () {
       var promise = file.write( cache.toJSON() );
       return promise;
+    },
+
+    _update: function (list) {
+      if ( Immutable.List.isList(list) ) {
+        cache = list;
+      }
+    },
+
+    _toList: function () {
+      return cache;
     }
   };
 
