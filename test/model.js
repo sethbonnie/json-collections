@@ -1,3 +1,5 @@
+var fs = require( 'fs' );
+var path = require( 'path' );
 var assert = require( 'assert' );
 var Collection = require( '../src/collection' );
 
@@ -87,13 +89,31 @@ describe( 'model api', function () {
 
   describe( 'toJSON()', function () {
     it( 'returns a correctly formatted object', function () {
+      var obj = model.toJSON();
 
+      assert.equal( obj.id, 1 );
+      assert.equal( obj.name, 'Peyton Manning' );
+      assert.equal( obj.team, 'Colts' );
     });
   });
 
   describe( 'save()', function () {
-    it( 'updates the JSON file on disk', function() {
+    it( 'updates the JSON file on disk', function (done) {
+      var player = model.toJSON();
+      var filepath = path.resolve( __dirname, 'fixtures', 'players.json' );
 
+      model.save()
+        .then(function () {
+          // file should exist here
+          fs.readFile( filepath, { encoding: 'utf-8' }, function( err, contents ) {
+            if ( err ) throw err;
+
+            var json = JSON.parse( contents );
+
+            assert( json[0].name, player.name );
+            done();
+          });
+        });
     });
   })
 });
