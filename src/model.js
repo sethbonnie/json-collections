@@ -38,7 +38,7 @@ var Model = module.exports = function (map, collection, cache) {
         newMap = map.merge( key );
       }
 
-      cache = updateCache( map, newMap, collection );
+      updateCache( map, newMap, collection );
 
       map = newMap;
 

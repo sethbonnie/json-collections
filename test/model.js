@@ -47,7 +47,7 @@ describe( 'model api', function () {
       player = Players.findOne({ number: 18 });
       assert( !player );
 
-      model.set( 'number', 18 );
+      model.set( 'number', 18 );  
 
       player = Players.findOne({ number: 18 })
       assert( player );
@@ -68,11 +68,20 @@ describe( 'model api', function () {
 
   describe( 'remove(key)', function () {
     it( 'removes the key from the model', function () {
-
+      assert( model.get('team') );
+      model.remove('team');
+      assert( !model.get('team') );
     });
 
     it( 'should be reflected in the collection', function () {
+      var id = model.get('id');
+      var player = Players.findOne({ team: 'Colts' });
+      assert( player );
 
+      model.remove('team');
+
+      player = Players.findOne({ team: 'Colts' });
+      assert( !player );
     });
   });
 
