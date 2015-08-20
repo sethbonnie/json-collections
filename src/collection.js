@@ -23,7 +23,11 @@ module.exports = function Collection( config ) {
   }
 
   // Our internal collection
-  var cache;
+  var state;
+
+  // State tracking
+  var history = Immutable.List();
+  var historyPos = 0;
 
   // Our external api
   var collection;
@@ -33,21 +37,21 @@ module.exports = function Collection( config ) {
 
   if ( !file.exists ) {
     // Create an empty list
-    cache = Immutable.List();
+    state = Immutable.List();
   }
   else {
-    cache = Immutable.fromJS( file.read() );
+    state = Immutable.fromJS( file.read() );
   }
 
   collection = {
     size: function () {
-      return cache.size;
+      return state.size;
     },
 
     add: function ( data ) {
       var map = Immutable.fromJS( data );
 
-      cache = cache.push( map );
+      this._update( state.push(map) );
 
       return collection;
     },
@@ -55,7 +59,7 @@ module.exports = function Collection( config ) {
     find: function (query) {
       var keys = Object.keys( query );
 
-      var result = cache.filter( function (value) {
+      var result = state.filter( function (value) {
         var key;
         for ( var i = 0; i < keys.length; i++) {
           key = keys[i];
@@ -67,7 +71,7 @@ module.exports = function Collection( config ) {
       });
 
       return result.map( function (item) {
-        return Model( item, collection, cache );
+        return Model( item, collection, state );
       }).toArray();
     },
 
@@ -80,7 +84,7 @@ module.exports = function Collection( config ) {
 
       // Since we want to keep the items that don't match, we flip the usual
       // false and true tests.
-      cache = cache.filter(function (value) {
+      this._update(state.filter(function (value) {
         var key;
 
         for ( var i = 0; i < keys.length; i++ ) {
@@ -90,32 +94,44 @@ module.exports = function Collection( config ) {
           }
         }
         return false;
-      });
+      }));
 
       return collection;
     },
 
     toArray: function () {
-      return cache.toArray();
+      return state.toArray();
     },
 
     toJSON: function () {
-      return cache.toJSON();
+      return state.toJSON();
     },
 
     persist: function () {
-      var promise = file.write( cache.toJSON() );
+      var promise = file.write( state.toJSON() );
       return promise;
+    },
+
+    undo: function () {
+      historyPos--;
+      state = history.get( historyPos );
+      return collection;
     },
 
     _update: function (list) {
       if ( Immutable.List.isList(list) ) {
-        cache = list;
+        // first condense the history to the current position;
+        history = history.setSize( historyPos );
+        historyPos++;
+        history = history.push( list );
+
+        // update the state
+        state = list;
       }
     },
 
     _toList: function () {
-      return cache;
+      return state;
     }
   };
 

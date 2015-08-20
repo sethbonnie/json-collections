@@ -231,4 +231,21 @@ describe( 'Collection instance', function() {
       assert( typeof result[0].save, 'function' );
     });
 	});
+
+
+
+  describe( 'history tracking', function() {
+    describe( '#undo()', function() {
+      it( 'undoes the last mutation', function() {
+        Players
+          .add({
+            id: 1
+          });
+
+        assert( typeof Players.findOne({ id: 1 }), 'object' );
+        Players.undo();
+        assert( typeof Players.findOne({ id: 1 }), 'undefined' );
+      });
+    });
+  });
 });
