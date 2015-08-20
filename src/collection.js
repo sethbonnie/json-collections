@@ -27,7 +27,6 @@ module.exports = function Collection( config ) {
 
   // State tracking
   var history = Immutable.List();
-  var historyPos = 0;
 
   // Our external api
   var collection;
@@ -42,6 +41,9 @@ module.exports = function Collection( config ) {
   else {
     state = Immutable.fromJS( file.read() );
   }
+
+  history = history.push(state);
+  historyPos = 0;
 
   collection = {
     size: function () {
@@ -114,19 +116,32 @@ module.exports = function Collection( config ) {
 
     undo: function () {
       historyPos--;
+      if ( historyPos < 1 ) {
+        historyPos = 0;
+      }
       state = history.get( historyPos );
       return collection;
     },
 
-    _update: function (list) {
-      if ( Immutable.List.isList(list) ) {
+    redo: function () {
+      historyPos++;
+      if ( historyPos >= history.size ) {
+        historyPos = history.size - 1;
+      }
+      state = history.get( historyPos );
+
+      return collection;
+    },
+
+    _update: function (newState) {
+      if ( Immutable.List.isList(newState) ) {
         // first condense the history to the current position;
-        history = history.setSize( historyPos );
+        history = history.setSize( historyPos + 1 );
         historyPos++;
-        history = history.push( list );
+        history = history.push( newState );
 
         // update the state
-        state = list;
+        state = newState;
       }
     },
 

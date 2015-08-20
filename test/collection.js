@@ -247,5 +247,40 @@ describe( 'Collection instance', function() {
         assert( typeof Players.findOne({ id: 1 }), 'undefined' );
       });
     });
+
+    describe( '#redo()', function() {
+      it( 'undoes an undo()', function() {
+        Players
+          .add({
+            id: 1
+          });
+
+        assert( typeof Players.findOne({ id: 1 }), 'object' );
+        Players.undo();
+        assert( typeof Players.findOne({ id: 1 }), 'undefined' );
+        Players.redo();
+        assert( typeof Players.findOne({ id: 1 }), 'object' );
+      });
+
+      it( 'mutating the state resets the top of the stack', function() {
+        // meaning, no more redos :(
+        Players
+          .add({
+            id: 1
+          })
+          .add({
+            id: 2
+          })
+          .undo() // go back to when the state was just [{id:1}]
+          .add({
+            id: 3
+          })
+          .redo();
+
+        assert.equal( typeof Players.findOne({ id: 1 }), 'object' );
+        assert.equal( typeof Players.findOne({ id: 2 }), 'undefined' );
+        assert.equal( typeof Players.findOne({ id: 3 }), 'object' );
+      });
+    });
   });
 });
