@@ -4,8 +4,7 @@ var mkdirp = require( 'mkdirp' );
 var Promise = require( 'promise' );
 
 module.exports = function ( filepath ) {
-  var filepath = path.resolve( filepath );
-  var exists = fs.existsSync( filepath );
+  filepath = path.resolve( filepath );
 
   var fileObj = {
     read: function () {
@@ -17,8 +16,10 @@ module.exports = function ( filepath ) {
         json = JSON.parse( data );
       }
       catch ( err ) {
-        console.error( 'An error occurred while trying to read file:', filepath );
-        console.error( 'Ensure that the file has correctly formatted JSON and try again.' );
+        console.error( 
+          'Error while trying to read file:', filepath, '\n' +
+          'Ensure file has correctly formatted JSON and try again.' 
+        );
         throw err;
       }
 
@@ -47,7 +48,7 @@ module.exports = function ( filepath ) {
     },
 
     exists: fs.existsSync( filepath )
-  }
+  };
 
   return fileObj;
 };

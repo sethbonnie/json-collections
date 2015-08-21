@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/sethbonnie/json-collections#readme",
   "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-jshint": "^1.11.2",
     "immutable": "^3.7.4",
     "mkdirp": "^0.5.1",
     "mocha": "^2.2.5",

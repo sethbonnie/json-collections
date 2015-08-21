@@ -3,16 +3,32 @@ var Map = Immutable.Map;
 var List = Immutable.List;
 
 /**
+  * Updates the `oldMap` in `list` with `newMap`
+  */
+function updateCache( oldMap, newMap, collection ) {
+  var list = collection._toList();
+  var index = list.indexOf( oldMap );
+
+  if ( index > -1 ) {
+    list = list.set( index, newMap );
+  }
+
+  collection._update(list);
+  return list;
+}
+
+/**
   * 
   */
-var Model = module.exports = function (map, collection, cache) {
+module.exports = function Model(map, collection, cache) {
   var model;
 
   if ( !Map.isMap(map) ) {
     throw new Error( 'Missing map argument to Model constructor.' );
   }
 
-  if ( typeof collection !== 'object' || typeof collection.persist !== 'function' ) {
+  if ( typeof collection !== 'object' || 
+       typeof collection.persist !== 'function' ) {
     throw new Error( 'Missing collection argument to Model constructor.' );
   }
 
@@ -76,19 +92,4 @@ var Model = module.exports = function (map, collection, cache) {
   };
 
   return model;
-};
-
-/**
-  * Updates the `oldMap` in `list` with `newMap`
-  */
-function updateCache( oldMap, newMap, collection ) {
-  var list = collection._toList();
-  var index = list.indexOf( oldMap );
-
-  if ( index > -1 ) {
-    list = list.set( index, newMap );
-  }
-
-  collection._update(list);
-  return list;
 };

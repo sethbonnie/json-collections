@@ -10,8 +10,8 @@ var Model = require( './model' );
   *   You can also choose to give it a `dataDir` param, which defaults to the 
   *   current directory if not given. This will be used as the location to 
   *   save the JSON file.
-  * @returns a collection object which can be used to manipulate the JSON in memory
-  *   and persist it to disk.
+  * @returns a collection object which can be used to manipulate the JSON in
+  *   memory and persist it to disk.
   */
 module.exports = function Collection( config ) {
   var name = config.name;
@@ -19,7 +19,9 @@ module.exports = function Collection( config ) {
   var filepath = path.resolve( dataDir, name + '.json' );
 
   if ( typeof name !== 'string' ) {
-    throw new Error( 'Collection must be passed an object with a name parameter.' );
+    throw new Error( 
+      'Collection must be passed an object with a "name" parameter.'
+    );
   }
 
   // Our internal collection
@@ -27,6 +29,7 @@ module.exports = function Collection( config ) {
 
   // State tracking
   var history = Immutable.List();
+  var historyPos;
 
   // Our external api
   var collection;
@@ -65,7 +68,7 @@ module.exports = function Collection( config ) {
         var key;
         for ( var i = 0; i < keys.length; i++) {
           key = keys[i];
-          if ( value.get(key) != query[key] ) {
+          if ( value.get(key) !== query[key] ) {
             return false;
           }
         }
@@ -91,7 +94,7 @@ module.exports = function Collection( config ) {
 
         for ( var i = 0; i < keys.length; i++ ) {
           key = keys[i];
-          if ( value.get(key) != query[key] ) {
+          if ( value.get(key) !== query[key] ) {
             return true; 
           }
         }
