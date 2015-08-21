@@ -8,18 +8,21 @@ describe( 'model api', function () {
   var model;
 
   beforeEach(function () {
-    Players = Collection({ name: 'players', dataDir: __dirname + '/fixtures' });
+    Players = Collection({
+      name: 'players',
+      dataDir: __dirname + '/fixtures'
+    });
 
     Players
       .add({
         id: 1,
-        name: "Peyton Manning",
-        team: "Colts"
+        name: 'Peyton Manning',
+        team: 'Colts'
       })
       .add({
         id: 2,
-        name: "Tom Brady",
-        team: "Patriots"
+        name: 'Tom Brady',
+        team: 'Patriots'
       });
 
     model = Players.findOne({ id: 1 });
@@ -51,13 +54,13 @@ describe( 'model api', function () {
 
       model.set( 'number', 18 );  
 
-      player = Players.findOne({ number: 18 })
+      player = Players.findOne({ number: 18 });
       assert( player );
     });
   });
 
   describe( 'set( dataObj )', function () {
-    it( 'updates each of the keys in dataObj with the corresponding values', function () {
+    it( 'updates each of the keys in dataObj', function () {
       model.set({
         number: 18,
         rating: 98.3
@@ -76,7 +79,6 @@ describe( 'model api', function () {
     });
 
     it( 'should be reflected in the collection', function () {
-      var id = model.get('id');
       var player = Players.findOne({ team: 'Colts' });
       assert( player );
 
@@ -105,7 +107,9 @@ describe( 'model api', function () {
       model.save()
         .then(function () {
           // file should exist here
-          fs.readFile( filepath, { encoding: 'utf-8' }, function( err, contents ) {
+          fs.readFile( filepath, {
+            encoding: 'utf-8'
+          }, function( err, contents ) {
             if ( err ) throw err;
 
             var json = JSON.parse( contents );
@@ -115,5 +119,5 @@ describe( 'model api', function () {
           });
         });
     });
-  })
+  });
 });

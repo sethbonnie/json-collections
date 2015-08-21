@@ -1,11 +1,10 @@
 var fs = require( 'fs' );
-var path = require( 'path' );
 var assert = require( 'assert' );
-var rm_rf = require( 'rimraf' );
+var rmrf = require( 'rimraf' );
 var Collection = require( '../src/collection' );
 
 describe( 'Collection constructor', function() {
-	it( 'throws unless given a config object with a string `name` key', function() {
+	it( 'throws when given a config object without "name" key', function() {
 		assert.throws(function() {
 			Collection('users');
 		});
@@ -25,7 +24,11 @@ describe( 'Collection constructor', function() {
 
 	describe( 'when file already exists', function() {
 		it( 'loads the data from that JSON file', function() {
-			var Users = Collection({ name: 'users', dataDir: __dirname + '/fixtures' });
+			var Users = Collection({ 
+        name: 'users', 
+        dataDir: __dirname + '/fixtures'
+      });
+
 			assert.equal( Users.toArray().length, 3 );
 		});
 	});
@@ -37,10 +40,13 @@ describe( 'Collection instance', function() {
 	var Players;
 	
 	beforeEach(function( done ) {
-    rm_rf( filepath, function (err) {
+    rmrf( filepath, function (err) {
       if ( err ) throw err;
 
-      Players = Collection({ name: 'players', dataDir: __dirname + '/fixtures' });
+      Players = Collection({
+        name: 'players',
+        dataDir: __dirname + '/fixtures' 
+      });
       done(); 
     });
 	});
@@ -49,13 +55,12 @@ describe( 'Collection instance', function() {
     it( 'returns zero when the collection is empty', function() {
       assert.equal( Players.size(), 0 );
     });
-  })
+  });
 
 	describe( '#add(item)', function() {
     var player = { number: 12, name: 'Tom Brady', team: 'Patriots' };
 
     it( 'adds the given item to the collection', function() {
-      var item;
       Players.add( player );
 
       assert.deepEqual( Players.toJSON()[0], player );
@@ -85,7 +90,7 @@ describe( 'Collection instance', function() {
         });
     });
 
-    it( 'returns an empty Array if query does not match any models', function() {
+    it( 'returns an empty Array if query does not match', function() {
       var result = Players.find({ team: 'Eagles' });
 
       assert.equal( result.length, 0 );
@@ -118,7 +123,7 @@ describe( 'Collection instance', function() {
         });
     });
 
-    it( 'returns `undefined` if query does not match any models', function() {
+    it( 'returns `undefined` if query does not match', function() {
       var result = Players.findOne({ team: 'Eagles' });
 
       assert.equal( typeof result, 'undefined' );
@@ -194,7 +199,9 @@ describe( 'Collection instance', function() {
 
       Players.persist()
         .then(function() {
-          fs.readFile( filepath, { encoding: 'utf-8' }, function( err, contents ) {
+          fs.readFile( filepath, {
+            encoding: 'utf-8' 
+          }, function( err, contents ) {
             if ( err ) throw err;
 
             var json = JSON.parse( contents );
@@ -209,7 +216,6 @@ describe( 'Collection instance', function() {
 	describe( '#toJSON()', function() {
     it( 'returns an array of objects', function() {
       var result;
-      var obj;
 
       Players.add({ id: 33 });
 
