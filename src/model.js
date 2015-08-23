@@ -1,6 +1,5 @@
 var Immutable = require( 'immutable' );
 var Map = Immutable.Map;
-var List = Immutable.List;
 
 /**
   * Replaces the oldItem in collection with newItem.
