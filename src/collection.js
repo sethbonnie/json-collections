@@ -201,7 +201,7 @@ module.exports = function Collection( config ) {
       }
     },
 
-    _toList: function () {
+    _getState: function () {
       return state;
     }
   };

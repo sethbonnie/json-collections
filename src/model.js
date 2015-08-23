@@ -3,18 +3,18 @@ var Map = Immutable.Map;
 var List = Immutable.List;
 
 /**
-  * Updates the `oldMap` in `list` with `newMap`
+  * Updates the `oldMap` in  with `newMap`
   */
 function updateCache( oldMap, newMap, collection ) {
-  var list = collection._toList();
-  var index = list.indexOf( oldMap );
+  var state = collection._getState();
+  var index = state.indexOf( oldMap );
 
   if ( index > -1 ) {
-    list = list.set( index, newMap );
+    state = state.set( index, newMap );
   }
 
-  collection._update(list);
-  return list;
+  collection._update(state);
+  return state;
 }
 
 /**
