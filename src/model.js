@@ -23,9 +23,12 @@ function updateCache( oldItem, newItem, collection ) {
 }
 
 /**
-  * 
+  * Constructs a model given a map and the collection it will belong to.
+  * @param {Map} map - The state of the model.
+  * @param {Object} collection - The collection which this model belongs to.
+  * @returns A model object.
   */
-module.exports = function Model(map, collection, cache) {
+module.exports = function Model(map, collection) {
   var model;
 
   if ( !Map.isMap(map) ) {
@@ -35,10 +38,6 @@ module.exports = function Model(map, collection, cache) {
   if ( typeof collection !== 'object' || 
        typeof collection.persist !== 'function' ) {
     throw new Error( 'Missing collection argument to Model constructor.' );
-  }
-
-  if ( !List.isList(cache) ) {
-    throw new Error( 'Missing cache argument to Model constructor.' );
   }
 
   model = {

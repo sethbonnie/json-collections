@@ -4,6 +4,7 @@ var store = require( './file-store' );
 var Model = require( './model' );
 
 /**
+  * Constructs a collection given a configuration object.
   * @param config - an object containing the configuration parameters for this
   *   collection. It *MUST* contain a <String> name parameter.
   *

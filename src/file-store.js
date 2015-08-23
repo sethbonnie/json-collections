@@ -3,6 +3,13 @@ var path = require( 'path' );
 var mkdirp = require( 'mkdirp' );
 var Promise = require( 'promise' );
 
+/**
+  * Given a file path, creates an object with wrapper functions around
+  * reading (synchronously) and writing (asynchronously).
+  * @param {String} filepath - The filepath to be read from and written to.
+  * @returns {Object} An object with `read()` and `write()` methods to the
+  *   enclosed filepath.
+  */
 module.exports = function ( filepath ) {
   filepath = path.resolve( filepath );
 
