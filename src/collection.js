@@ -49,18 +49,34 @@ module.exports = function Collection( config ) {
   historyPos = 0;
 
   collection = {
+    /**
+      * Returns the number of items in the collection.
+      * @returns {Number} The current size of the collection.
+      */
     size: function () {
       return state.size;
     },
 
-    add: function ( data ) {
-      var map = Immutable.fromJS( data );
+    /**
+      * Adds an item to the collection.
+      * @param {Object} item - An object to be appended to the collection.
+      * @return {Object} The collection itself.
+      */
+    add: function ( item ) {
+      var map = Immutable.fromJS( item );
 
       this._update( state.push(map) );
 
       return collection;
     },
 
+    /**
+      * Returns a list of items that match the given query.
+      * @param {Object} query - An object with keys matching those of the
+      *   items in the collection. If the values in the query match an item
+      *   in the collection, then that item is returned as part of the result.
+      * @returns {Array} An array of models that match the given query.
+      */
     find: function (query) {
       var keys = Object.keys( query );
 
@@ -80,10 +96,24 @@ module.exports = function Collection( config ) {
       }).toArray();
     },
 
+    /**
+      * Returns the first item that matches the given query; otherwise,
+      * it returns undefined.
+      * @param query - An object containing values to be matched against items
+      *   in the collection.
+      * @returns {Object} - A model matching the given query.
+      */
     findOne: function (query) {
       return this.find(query)[0];
     },
 
+    /**
+      * Removes the items that match the query from the collection.
+      * @param query - An object containing values to be matched against items
+      *   in the collection.
+      * @returns {Object} - The collection with items that matched the query
+      *   removed.
+      */
     remove: function (query) {
       var keys = Object.keys( query );
 
@@ -104,19 +134,37 @@ module.exports = function Collection( config ) {
       return collection;
     },
 
+    /**
+      * Returns an array of the items in the collection as models.
+      * @returns {Array}
+      */
     toArray: function () {
       return state.toArray();
     },
 
+    /**
+      * Returns a pure JS array of objects. It's not quite a string,
+      * but one that can be stringified easily.
+      * @returns {Array}
+      */
     toJSON: function () {
       return state.toJSON();
     },
 
+    /**
+      * Persists the current state of the collection to disk.
+      * @returns {Promise} - A promise that is resolved when the collection
+      *   has been written to disk.
+      */
     persist: function () {
       var promise = file.write( state.toJSON() );
       return promise;
     },
 
+    /**
+      * Undoes any previous mutable actions such as `add()` or `remove()`.
+      * @returns {Object} - THe collection for chaining purposes.
+      */
     undo: function () {
       historyPos--;
       if ( historyPos < 1 ) {
@@ -126,6 +174,11 @@ module.exports = function Collection( config ) {
       return collection;
     },
 
+    /**
+      * Redoes any `undo()` calls. Does nothing if the last action was a 
+      * mutating action such as `remove()` or `add()`.
+      * @returns {Object} - The collection mostly for chaining.
+      */
     redo: function () {
       historyPos++;
       if ( historyPos >= history.size ) {
