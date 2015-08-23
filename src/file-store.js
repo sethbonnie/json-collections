@@ -7,6 +7,10 @@ module.exports = function ( filepath ) {
   filepath = path.resolve( filepath );
 
   var fileObj = {
+    /**
+      * Synchronously tries to read and parse JSON from the enclosed filepath.
+      * @returns {Object} - The JSON parsed from the file.
+      */
     read: function () {
       var data;
       var json;
@@ -26,6 +30,12 @@ module.exports = function ( filepath ) {
       return json;
     },
 
+    /**
+      * Writes the given data to the enclosed filepath.
+      * @param {Object} - An object that is easily convertible to JSON.
+      * @returns {Promise} - A promise that is resolved upon completion of 
+      *   the write to disk, it is rejected if any errors occur.
+      */
     write: function( data ) {
       var json = JSON.stringify( data );
 
