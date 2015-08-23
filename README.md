@@ -66,7 +66,56 @@ API
 ----
 
 ### Collection
-...
+
+`add(item)`
+Adds an item to the collection.
+
+`size()`
+Returns the number of items in the collection.
+
+`find(query)`
+Returns a list of items that match the given query.
+
+`findOne(query)`
+Returns the first model that matches the given query; otherwise, it 
+returns `undefined`.
+
+`remove(query)`
+Removes the items that match the given query from the collection.
+
+`persist()`
+Writes the current state of the collection to disk.
+
+`toArray()`
+Returns the collection as an array of models.
+
+`toJSON()`
+Returns a pure data array of the items in the collection.
+
+`undo()`
+Undoes any previous mutable actions such as `add()` or `remove()`.
+
+`redo()`
+Redoes any `undo()` calls. Does nothing if the last action was a mutating
+action such as `remove()` or `add()`.
 
 ### Model
-...
+
+`get(key)`
+Returns the value of the given `key` in the model.
+
+`set(key, value)`
+Updates the `key` in the model with the given `value`.
+
+`set(dataObj)`
+Merges the `key` value pairs in the given object with those in the model.
+
+`remove(key)`
+Permanently removes a `key` from the model. This change is immediately
+reflected in the model's collection.
+
+`save()`
+Saves the current state of the model to disk.
+
+`toJSON()`
+Returns a pure JSON data version of the model.
