@@ -90,6 +90,12 @@ describe( 'Collection instance', function() {
         });
     });
 
+    it( 'returns the collection if given an empty query', function() {
+      var result = Players.find();
+
+      assert.equal( result.length, 2 );
+    });
+
     it( 'returns an empty Array if query does not match', function() {
       var result = Players.find({ team: 'Eagles' });
 
@@ -123,6 +129,12 @@ describe( 'Collection instance', function() {
         });
     });
 
+    it( 'returns `undefined` when given an empty query', function() {
+      var result = Players.findOne();
+
+      assert.equal( typeof result, 'undefined' );
+    });
+
     it( 'returns `undefined` if query does not match', function() {
       var result = Players.findOne({ team: 'Eagles' });
 
@@ -151,6 +163,12 @@ describe( 'Collection instance', function() {
           position: 'Quarterback',
           team: 'Broncos'
         });
+    });
+
+    it( 'does not remove any items when given an empty query', function() {
+      Players.remove();
+
+      assert.equal( Players.size(), 2 );
     });
 
     it( 'does not remove any items that do not match the query', function() {

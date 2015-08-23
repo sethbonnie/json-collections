@@ -79,18 +79,25 @@ module.exports = function Collection( config ) {
       * @returns {Array} An array of models that match the given query.
       */
     find: function (query) {
-      var keys = Object.keys( query );
+      var keys, result;
 
-      var result = state.filter( function (value) {
-        var key;
-        for ( var i = 0; i < keys.length; i++) {
-          key = keys[i];
-          if ( value.get(key) !== query[key] ) {
-            return false;
+      if ( query ) {
+        keys = Object.keys( query );
+
+        result = state.filter( function (value) {
+          var key;
+          for ( var i = 0; i < keys.length; i++) {
+            key = keys[i];
+            if ( value.get(key) !== query[key] ) {
+              return false;
+            }
           }
-        }
-        return true;
-      });
+          return true;
+        });
+      }
+      else {
+        result = state;
+      }
 
       return result.map( function (item) {
         return Model( item, collection, state );
@@ -105,6 +112,9 @@ module.exports = function Collection( config ) {
       * @returns {Object} - A model matching the given query.
       */
     findOne: function (query) {
+      if ( !query ) {
+        return undefined;
+      }
       return this.find(query)[0];
     },
 
@@ -116,21 +126,25 @@ module.exports = function Collection( config ) {
       *   removed.
       */
     remove: function (query) {
-      var keys = Object.keys( query );
+      var keys;
+      
+      if ( query ) {
+        keys = Object.keys( query );
 
-      // Since we want to keep the items that don't match, we flip the usual
-      // false and true tests.
-      this._update(state.filter(function (value) {
-        var key;
+        // Since we want to keep the items that don't match, we flip the usual
+        // false and true tests.
+        this._update(state.filter(function (value) {
+          var key;
 
-        for ( var i = 0; i < keys.length; i++ ) {
-          key = keys[i];
-          if ( value.get(key) !== query[key] ) {
-            return true; 
+          for ( var i = 0; i < keys.length; i++ ) {
+            key = keys[i];
+            if ( value.get(key) !== query[key] ) {
+              return true; 
+            }
           }
-        }
-        return false;
-      }));
+          return false;
+        }));
+      }
 
       return collection;
     },
