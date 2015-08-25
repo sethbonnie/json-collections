@@ -88,7 +88,16 @@ module.exports = function Collection( config ) {
           var key;
           for ( var i = 0; i < keys.length; i++) {
             key = keys[i];
-            if ( value.get(key) !== query[key] ) {
+
+            // If the key is a predicate function, check if the 
+            // the current value returns a truthy value
+            if ( typeof query[key] === 'function' ) {
+              if (!query[key](value.get(key)) )
+                return false;
+            }
+
+            // This is a regular match directly on values
+            else if ( query[key] !== value.get(key) ) {
               return false;
             }
           }
@@ -138,7 +147,17 @@ module.exports = function Collection( config ) {
 
           for ( var i = 0; i < keys.length; i++ ) {
             key = keys[i];
-            if ( value.get(key) !== query[key] ) {
+
+            // If the key is a predicate function, check if the 
+            // the current value returns a truthy value
+            if ( typeof query[key] === 'function' ) {
+              console.log( query[key](value.get(key)) );
+              if (!query[key](value.get(key)) )
+                return true;
+            }
+
+            // This is a regular match directly on values
+            else if ( value.get(key) !== query[key] ) {
               return true; 
             }
           }

@@ -110,6 +110,17 @@ describe( 'Collection instance', function() {
       // check model properties
       assert.equal( typeof result[0].set, 'function' );
     });
+
+    it( 'supports functions as queries', function() {
+      var result = Players.find({ 
+        number: function(n) {
+          return n > 15;
+        }
+      });
+
+      assert.equal( result.length, 1 );
+      assert( result[0].get('number') > 15 );
+    });
 	});
 
 	describe( '#findOne(query)', function() {
@@ -145,6 +156,16 @@ describe( 'Collection instance', function() {
       var result = Players.findOne({ position: 'Quarterback' }).toJSON();
 
       assert.equal( result.number, 12 );
+    });
+
+    it( 'supports functions as queries', function() {
+      var player = Players.findOne({ 
+        number: function(n) {
+          return n > 15;
+        }
+      });
+
+      assert.equal( player.get('name'), 'Peyton Manning' );
     });
 	});
 
@@ -189,6 +210,15 @@ describe( 'Collection instance', function() {
         .remove({ number: 18 });
 
       assert.equal( Players.size(), 0 );
+    });
+
+    it( 'supports functions as queries', function() {
+      var result = Players.remove({ 
+        number: function(n) {
+          return n > 15;
+        }
+      });
+      assert.equal( result.size(), 1 );
     });
 	});
 
