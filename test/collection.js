@@ -121,6 +121,13 @@ describe( 'Collection instance', function() {
       assert.equal( result.length, 1 );
       assert( result[0].get('number') > 15 );
     });
+
+    it( 'supports regex queries', function() {
+      var result = Players.find({ name: /tom/i });
+
+      assert.equal( result.length, 1 );
+      assert( result[0].get('number'), 12 );
+    });
 	});
 
 	describe( '#findOne(query)', function() {
@@ -163,6 +170,14 @@ describe( 'Collection instance', function() {
         number: function(n) {
           return n > 15;
         }
+      });
+
+      assert.equal( player.get('name'), 'Peyton Manning' );
+    });
+
+    it( 'supports regex queries', function() {
+      var player = Players.findOne({
+        name: /manning/i
       });
 
       assert.equal( player.get('name'), 'Peyton Manning' );
@@ -218,6 +233,15 @@ describe( 'Collection instance', function() {
           return n > 15;
         }
       });
+
+      assert.equal( result.size(), 1 );
+    });
+
+    it( 'supports regex queries', function() {
+      var result = Players.remove({
+        name: /ady/i
+      });
+
       assert.equal( result.size(), 1 );
     });
 	});

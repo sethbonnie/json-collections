@@ -96,6 +96,12 @@ module.exports = function Collection( config ) {
                 return false;
             }
 
+            // If it's a regex query, try matching on it
+            else if ( query[key] instanceof RegExp ) {
+              if ( !query[key].test(value.get(key)) )
+                return false;
+            }
+
             // This is a regular match directly on values
             else if ( query[key] !== value.get(key) ) {
               return false;
@@ -156,8 +162,14 @@ module.exports = function Collection( config ) {
                 return true;
             }
 
+            // If the query is a regex object trying matching on it
+            else if ( query[key] instanceof RegExp ) {
+              if ( !query[key].test(value.get(key)) )
+                return true;
+            }
+
             // This is a regular match directly on values
-            else if ( value.get(key) !== query[key] ) {
+            else if ( query[key] !== value.get(key) ) {
               return true; 
             }
           }
